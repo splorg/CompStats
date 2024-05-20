@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Timers;
 using TaleWorlds.Core;
-using TaleWorlds.Diamond;
 using TaleWorlds.MountAndBlade;
 using static TaleWorlds.MountAndBlade.MultiplayerOptions;
-using Debug = TaleWorlds.Library.Debug;
 
 namespace CompStats
 {
