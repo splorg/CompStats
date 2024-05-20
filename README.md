@@ -8,7 +8,7 @@ In the solution's bin directory, create a "taleworlds" directory and copy all th
 
 Verify that the file paths match with the dependencies in src/CompStats.csproj
 
-# How to use
+## How to use
 
 At the moment, the mod does not save any data directly to a database; instead it will export all data to an external API. So to use it, you need your own API with `POST /match` and `POST /players` endpoints and then you can handle the data however you want. **This might not be the case after further testing or future requirement changes, this is still a work in progress.**
 
