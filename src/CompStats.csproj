@@ -1,0 +1,62 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<RootNamespace>CompStats</RootNamespace>
+		<AssemblyName>CompStats</AssemblyName>
+		<ModuleName>CompStats</ModuleName>
+		<OutputPath>..\bin\x64\Release\</OutputPath>
+		<AppendTargetFrameworkToOutputPath>False</AppendTargetFrameworkToOutputPath>
+		<PlatformTarget>x64</PlatformTarget>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Lib.Harmony" Version="2.2.2" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="Newtonsoft.Json.Bson" Version="1.0.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="TaleWorlds.Core">
+	    <HintPath>..\bin\taleworlds\TaleWorlds.Core.dll</HintPath>
+	  </Reference>
+	  <Reference Include="TaleWorlds.Diamond">
+	    <HintPath>..\bin\taleworlds\TaleWorlds.Diamond.dll</HintPath>
+	  </Reference>
+	  <Reference Include="TaleWorlds.DotNet">
+	    <HintPath>..\bin\taleworlds\TaleWorlds.DotNet.dll</HintPath>
+	  </Reference>
+	  <Reference Include="TaleWorlds.Engine">
+	    <HintPath>..\bin\taleworlds\TaleWorlds.Engine.dll</HintPath>
+	  </Reference>
+	  <Reference Include="TaleWorlds.Library">
+	    <HintPath>..\bin\taleworlds\TaleWorlds.Library.dll</HintPath>
+	  </Reference>
+	  <Reference Include="TaleWorlds.Localization">
+	    <HintPath>..\bin\taleworlds\TaleWorlds.Localization.dll</HintPath>
+	  </Reference>
+	  <Reference Include="TaleWorlds.MountAndBlade">
+	    <HintPath>..\bin\taleworlds\TaleWorlds.MountAndBlade.dll</HintPath>
+	  </Reference>
+	  <Reference Include="TaleWorlds.MountAndBlade.DedicatedCustomServer">
+	    <HintPath>..\bin\taleworlds\TaleWorlds.MountAndBlade.DedicatedCustomServer.dll</HintPath>
+	  </Reference>
+	  <Reference Include="TaleWorlds.MountAndBlade.Diamond">
+	    <HintPath>..\bin\taleworlds\TaleWorlds.MountAndBlade.Diamond.dll</HintPath>
+	  </Reference>
+	  <Reference Include="TaleWorlds.MountAndBlade.ListedServer">
+	    <HintPath>..\bin\taleworlds\TaleWorlds.MountAndBlade.ListedServer.dll</HintPath>
+	  </Reference>
+	  <Reference Include="TaleWorlds.MountAndBlade.Multiplayer">
+	    <HintPath>..\bin\taleworlds\TaleWorlds.MountAndBlade.Multiplayer.dll</HintPath>
+	  </Reference>
+	  <Reference Include="TaleWorlds.ObjectSystem">
+	    <HintPath>..\bin\taleworlds\TaleWorlds.ObjectSystem.dll</HintPath>
+	  </Reference>
+	  <Reference Include="TaleWorlds.PlayerServices">
+	    <HintPath>..\bin\taleworlds\TaleWorlds.PlayerServices.dll</HintPath>
+	  </Reference>
+	</ItemGroup>
+
+</Project>
