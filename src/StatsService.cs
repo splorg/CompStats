@@ -38,8 +38,9 @@ namespace CompStats
 
         public async void PostPlayers(List<Player> players, string matchId)
         {
-            string playersJson = JsonConvert.SerializeObject(players);
-            StringContent content = new StringContent(playersJson, Encoding.UTF8, "application/json");
+            PostPlayerDTO dto = new PostPlayerDTO(players, matchId);
+            string json = JsonConvert.SerializeObject(dto);
+            StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
 
             HttpResponseMessage response = await client.PostAsync(this.config.apiURL + "/players", content);
 

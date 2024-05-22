@@ -1,4 +1,6 @@
-﻿namespace CompStats
+﻿using System.Collections.Generic;
+
+namespace CompStats
 {
     public class Player
     {
@@ -16,6 +18,18 @@
         public void SetStats(Stats stats)
         {
             this.stats = stats;
+        }
+    }
+
+    public class PostPlayerDTO
+    {
+        public List<Player> players;
+        public string matchId;
+
+        public PostPlayerDTO(List<Player> players, string matchId)
+        {
+            this.players = players;
+            this.matchId = matchId;
         }
     }
 }
