@@ -35,7 +35,7 @@ namespace CompStats
         protected override void OnSubModuleLoad()
         {
             base.OnSubModuleLoad();
-            this.setup();
+            setup();
 
             Debug.Print("COMP STATS LOADED", 0, Debug.DebugColor.Green);
         }

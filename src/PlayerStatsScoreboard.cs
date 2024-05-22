@@ -9,8 +9,10 @@ namespace CompStats
     public class PlayerStatsScoreboard : MissionBehavior
     {
         private StatsService service;
+        private Config config;
         public PlayerStatsScoreboard(Config config)
         {
+            this.config = config;
             this.service = new StatsService(config);
         }
 
@@ -19,12 +21,17 @@ namespace CompStats
 
         protected override async void OnEndMission()
         {
-            string matchId = await createMatch();
-            // this.createOrUpdatePlayers(matchId);
             base.OnEndMission();
+
+            string matchId = await PostMatchInfo();
+
+            if (matchId != null)
+            {
+                PostPlayerStats(matchId);
+            }
         }
 
-        public void createOrUpdatePlayers(string mapId)
+        public void PostPlayerStats(string mapId)
         {
             if (GameNetwork.NetworkPeerCount > 0)
             {
@@ -59,19 +66,22 @@ namespace CompStats
                     }
                 }
 
-                //this.service.createOrUpdatePlayers(players, mapId);
+                service.PostPlayers(players, mapId);
             }
         }
 
-        public async Task<string> createMatch()
+        public async Task<string> PostMatchInfo()
         {
-            string mapId = await service.addMatch(
+            Match match = new Match(
                 Mission.Current.SceneName,
                 GetOptionString(OptionType.CultureTeam1),
                 GetOptionString(OptionType.CultureTeam2),
                 GetOptionString(OptionType.GameType)
             );
-            return mapId;
+            match.tournamentName = this.config.tournamentName;
+
+            string matchId = await service.PostMatch(match);
+            return matchId;
         }
 
         string GetOptionString(OptionType optionType)

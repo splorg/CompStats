@@ -1,4 +1,6 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Collections.Generic;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -14,15 +16,12 @@ namespace CompStats
             this.config = config;
             this.client = new HttpClient();
         }
-        public async Task<string> addMatch(string mapName, string team1, string team2, string gameType)
+        public async Task<string> PostMatch(Match match)
         {
-            Match match = new Match(mapName, team1, team2, gameType);
-            match.tournamentName = this.config.tournamentName;
-
             string matchJson = JsonConvert.SerializeObject(match);
             StringContent content = new StringContent(matchJson, Encoding.UTF8, "application/json");
 
-            HttpResponseMessage response = await this.client.PostAsync(this.config.apiURL + "/match", content);
+            HttpResponseMessage response = await client.PostAsync(this.config.apiURL + "/match", content);
 
             if (response.IsSuccessStatusCode)
             {
@@ -32,7 +31,21 @@ namespace CompStats
             }
             else
             {
-                throw new HttpRequestException($"Request failed with status code: {response.StatusCode}");
+                Console.WriteLine($"POST /match: Request failed with status code: {response.StatusCode}");
+                return null;
+            }
+        }
+
+        public async void PostPlayers(List<Player> players, string matchId)
+        {
+            string playersJson = JsonConvert.SerializeObject(players);
+            StringContent content = new StringContent(playersJson, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await client.PostAsync(this.config.apiURL + "/players", content);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                Console.WriteLine($"POST /players: Request failed with status code: {response.StatusCode}");
             }
         }
     }
