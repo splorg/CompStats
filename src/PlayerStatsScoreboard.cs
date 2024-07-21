@@ -82,7 +82,7 @@ namespace CompStats
 
             List<Player> players = BuildPlayerStats();
 
-            if (players != null && players.Count > 0)
+            if (players.Count > 0)
             {
                 match.SetPlayers(players);
                 _ = service.PostMatchStats(match);
