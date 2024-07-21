@@ -19,58 +19,58 @@ namespace CompStats
         public static PlayerStatsScoreboard Current { get; private set; }
         public override MissionBehaviorType BehaviorType => MissionBehaviorType.Other;
 
-        protected override async void OnEndMission()
+        protected override void OnEndMission()
         {
             base.OnEndMission();
 
-            string matchId = await PostMatchInfo();
+            MultiplayerWarmupComponent multiplayerWarmupComponent = Mission.Current.GetMissionBehavior<MultiplayerWarmupComponent>();
 
-            if (matchId != null)
+            if (multiplayerWarmupComponent == null || !multiplayerWarmupComponent.IsInWarmup)
             {
-                PostPlayerStats(matchId);
+                PostMatchInfo();
             }
         }
 
-        public void PostPlayerStats(string mapId)
+        public List<Player> BuildPlayerStats()
         {
-            if (GameNetwork.NetworkPeerCount > 0)
+            if (GameNetwork.NetworkPeerCount <= 0) { return null; }
+
+
+            List<Player> players = new List<Player>();
+
+            foreach (NetworkCommunicator peer in GameNetwork.NetworkPeersIncludingDisconnectedPeers)
             {
-                List<Player> players = new List<Player>();
-
-                foreach (NetworkCommunicator peer in GameNetwork.NetworkPeersIncludingDisconnectedPeers)
+                if (peer.ControlledAgent != null && peer.ControlledAgent.MissionPeer != null && peer.VirtualPlayer != null)
                 {
-                    if (peer.ControlledAgent != null && peer.ControlledAgent.MissionPeer != null && peer.VirtualPlayer != null)
+                    if (
+                        peer.ControlledAgent.MissionPeer.Team.Side == BattleSideEnum.Attacker ||
+                        peer.ControlledAgent.MissionPeer.Team.Side == BattleSideEnum.Defender
+                    )
                     {
-                        if (
-                            peer.ControlledAgent.MissionPeer.Team.Side == BattleSideEnum.Attacker || 
-                            peer.ControlledAgent.MissionPeer.Team.Side == BattleSideEnum.Defender
-                        )
+                        Player player = new Player(peer.UserName, peer.VirtualPlayer.Id.ToString());
+                        Stats playerStats = new Stats(
+                            peer.ControlledAgent.MissionPeer.KillCount,
+                            peer.ControlledAgent.MissionPeer.DeathCount,
+                            peer.ControlledAgent.MissionPeer.AssistCount,
+                            peer.ControlledAgent.MissionPeer.Score
+                        );
+
+                        if (Mission.Current.GetMissionBehavior<MissionMultiplayerGameModeBase>().GetWinnerTeam().Side == peer.ControlledAgent.MissionPeer.Team.Side)
                         {
-                            Player player = new Player(peer.UserName, peer.VirtualPlayer.Id.ToString());
-                            Stats playerStats = new Stats(
-                                peer.ControlledAgent.MissionPeer.KillCount,
-                                peer.ControlledAgent.MissionPeer.DeathCount,
-                                peer.ControlledAgent.MissionPeer.AssistCount,
-                                peer.ControlledAgent.MissionPeer.Score
-                            );
-
-                            if (Mission.Current.GetMissionBehavior<MissionMultiplayerGameModeBase>().GetWinnerTeam().Side == peer.ControlledAgent.MissionPeer.Team.Side)
-                            {
-                                playerStats.SetWinner();
-                            }
-
-                            player.SetStats(playerStats);
-
-                            players.Add(player);
+                            playerStats.SetWinner();
                         }
+
+                        player.SetStats(playerStats);
+
+                        players.Add(player);
                     }
                 }
-
-                service.PostPlayers(players, mapId);
             }
+
+            return players;
         }
 
-        public async Task<string> PostMatchInfo()
+        public void PostMatchInfo()
         {
             Match match = new Match(
                 Mission.Current.SceneName,
@@ -80,8 +80,13 @@ namespace CompStats
             );
             match.tournamentName = this.config.tournamentName;
 
-            string matchId = await service.PostMatch(match);
-            return matchId;
+            List<Player> players = BuildPlayerStats();
+
+            if (players != null && players.Count > 0)
+            {
+                match.SetPlayers(players);
+                _ = service.PostMatchStats(match);
+            }
         }
 
         string GetOptionString(OptionType optionType)
