@@ -15,6 +15,7 @@ namespace CompStats
         {
             this.config = config;
             this.client = new HttpClient();
+            this.client.DefaultRequestHeaders.Add("X-API-KEY", config.apiKey);
         }
         public async Task<string> PostMatchStats(Match match)
         {
