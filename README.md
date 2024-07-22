@@ -12,6 +12,19 @@ Verify that the file paths match with the dependencies in src/CompStats.csproj
 
 At the moment, the mod does not save any data directly to a database; instead it will export all data to an external API. So to use it, you need your own API with a `POST /stats` endpoint and then you can handle the data however you want. **This might not be the case after further testing or future requirement changes, this is still a work in progress.**
 
+Add the following to your `modules/Multiplayer/SubModule.xml` file:
+
+```
+<SubModule>
+    <Name value="CompStats" />
+    <DLLName value="CompStats.dll" />
+    <SubModuleClassType value="CompStats.CompStatsSubModule" />
+    <Tags>
+        <Tag key="DedicatedServerType" value="custom" />
+    </Tags>
+</SubModule>
+```
+
 Create a JSON file "config.json" in `/bin/Linux64_Shipping_Server/config.json`, in it you can set your base API URL, your API key, your current running tournament name and if stats tracking should be enabled or not. An example of this config file:
 
 ```
