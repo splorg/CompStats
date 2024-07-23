@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using TaleWorlds.Library;
 
 namespace CompStats
 {
     public class StatsService
     {
-        private Config config;
-        private HttpClient client;
+        private readonly Config config;
+        private readonly HttpClient client;
         public StatsService(Config config)
         {
             this.config = config;
@@ -22,19 +21,16 @@ namespace CompStats
             string matchJson = JsonConvert.SerializeObject(match);
             StringContent content = new StringContent(matchJson, Encoding.UTF8, "application/json");
 
-            HttpResponseMessage response = await client.PostAsync(this.config.apiURL + "/stats", content);
+            Debug.Print("POSTING STATS TO " + this.config.apiURL + "/stats", 0, Debug.DebugColor.Green);
 
-            if (response.IsSuccessStatusCode)
+            HttpResponseMessage response = await this.client.PostAsync(this.config.apiURL + "/stats", content);
+
+            if (!response.IsSuccessStatusCode)
             {
-                string responseJson = await response.Content.ReadAsStringAsync();
-                dynamic jsonResponse = JsonConvert.DeserializeObject(responseJson);
-                return jsonResponse.id;
+                Debug.Print($"POST /stats: Request failed with status code: {response.StatusCode}", 0, Debug.DebugColor.Red);
             }
-            else
-            {
-                Console.WriteLine($"POST /stats: Request failed with status code: {response.StatusCode}");
-                return null;
-            }
+
+            return null;
         }
     }
 }
